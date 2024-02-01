@@ -5,7 +5,12 @@ var city = 'Orlando';
 var weatherAPIKey = 'f5ae2638dc599c5d3619396cd657ae93';
 var requestWeatherUrl = 'https://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' + weatherAPIKey + '&units=imperial';
 var weather = {};
-
+var currentCityInfo = {
+    city: "",
+    temperature: "",
+    wind: "",
+    humidity: ""
+}
 
 
 // rewuest for openWeather API

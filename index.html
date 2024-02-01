@@ -11,9 +11,21 @@
 </head>
 
 <body>
-    <main class="container-fluid">
-        <h1 class="display-4 text-center bg-warning">Weather Report</h1>
-        <section class="row" id="input-and-thisDay">
+    <main class="container vh-100">
+        <header>
+            <h1 class="display-4 d-flex justify-content-center bg-warning">Weather Report</h1>
+        </header>
+
+        <section class="row h-25 border d-flex justify-content-between" id="input-and-thisDay">
+            <div class="col-4">
+                <h2 class="display-5">City Search</h2>
+                <input type="text" class="w-50">
+
+            </div>
+            <div id="current-display" class="col-7 border thick-border">
+                <h2 id="current-city" class="display-2">City Name</h2>
+
+            </div>
 
         </section>
 
