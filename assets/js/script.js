@@ -9,11 +9,12 @@ var city;
 var weatherAPIKey = 'f5ae2638dc599c5d3619396cd657ae93';
 
 var weather = {};
+var weatherForecast = [];
 
 userInput.on('change', function () {
     city = this.value
     getWeather();
-    getWeatherForcast();
+    getWeatherForecast();
 })
 
 
@@ -26,11 +27,10 @@ function getWeather() {
         method: 'GET',
         success: function (response) {
             // Assuming the request was successful and data is retrieved
-            weather.temp = response.main.temp;
-            weather.wind_speed = response.wind.speed;
+            weather.temp = Math.floor(response.main.temp);
+            weather.wind_speed = Math.floor(response.wind.speed);
             weather.humidity = response.main.humidity;
             weather.condition = response.weather[0].main
-            console.log(response);
             console.log(weather.condition);
             showCurrentWeather();
         },
@@ -42,24 +42,33 @@ function getWeather() {
     });
 }
 
-function getWeatherForcast() {
-    var requestWeatherForcastUrl = 'https://api.openweathermap.org/data/2.5/forecast?q=' + city + '&appid=' + weatherAPIKey + '&units=imperial';
-
+function getWeatherForecast() {
+    var requestWeatherForecastUrl = 'https://api.openweathermap.org/data/2.5/forecast?q=' + city + '&appid=' + weatherAPIKey + '&units=imperial';
+    weatherForecast = []; // Make sure the name is consistent (Forecast not Forcast)
     $.ajax({
-        url: requestWeatherForcastUrl,
+        url: requestWeatherForecastUrl,
         method: 'GET',
         success: function (response) {
             // Assuming the request was successful and data is retrieved
-
-            console.log(response);
-
+            for (var i = 0; i < response.list.length; i += 8) { // Adjusted to loop through each day
+                var forecast = {
+                    temp: Math.floor(response.list[i].main.temp),
+                    humidity: response.list[i].main.humidity,
+                    wind_speed: Math.floor(response.list[i].wind.speed), // Adjusted based on the correct path
+                    weather_condition: response.list[i].weather[0].main
+                };
+                weatherForecast.push(forecast);
+            }
+            console.log(response)
+            console.log(weatherForecast);
         },
-
         error: function (xhr, status, error) {
-
+            // Handle error
+            console.error("Error fetching weather forecast:", error);
         }
     });
 }
+
 
 function showCurrentWeather() {
     // Clear previous weather data
@@ -79,6 +88,9 @@ function showCurrentWeather() {
             break;
         case "Snow":
             imgSrc = "./assets/images/snowy.png";
+            break;
+        case "Thunderstorm":
+            imgSrc = "./assets/images/thunderstorms.png";
             break;
         // Add more cases as needed
         default:
@@ -106,7 +118,9 @@ function showCurrentWeather() {
     currentWeatherEl.append(currentWeatherListEl);
 }
 
+function showFiveDayForcast() {
 
+}
 
 
 // variable to handle user input via ID
