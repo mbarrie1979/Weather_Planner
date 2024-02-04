@@ -1,3 +1,7 @@
 #hit-enter {
     font-size: 20px;
 }
+
+.weather-icon {
+    height: 5rem;
+}
