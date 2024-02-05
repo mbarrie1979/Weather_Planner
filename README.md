@@ -30,6 +30,9 @@ The Weather Dashboard is a dynamic web application that provides users with the 
 
 - ![Screenshot 5](./assets/readme_screenshots/screenshot_5.png)
 
+## Try it Out!
+[Click here to try it out!](https://mbarrie1979.github.io/Weather_Planner/)
+
 
 ## API Integration
 
