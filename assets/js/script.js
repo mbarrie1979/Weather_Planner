@@ -26,12 +26,14 @@ function getWeather() {
         url: requestWeatherUrl,
         method: 'GET',
         success: function (response) {
+
             // Assuming the request was successful and data is retrieved
             weather.temp = Math.floor(response.main.temp);
             weather.wind_speed = Math.floor(response.wind.speed);
             weather.humidity = response.main.humidity;
             weather.condition = response.weather[0].main
             console.log(weather.condition);
+            console.log(response)
             showCurrentWeather();
         },
         // if invalid city is entered
@@ -55,12 +57,14 @@ function getWeatherForecast() {
                     temp: Math.floor(response.list[i].main.temp),
                     humidity: response.list[i].main.humidity,
                     wind_speed: Math.floor(response.list[i].wind.speed), // Adjusted based on the correct path
-                    weather_condition: response.list[i].weather[0].main
+                    condition: response.list[i].weather[0].main,
+                    date: response.list[i].dt_txt
                 };
                 weatherForecast.push(forecast);
             }
             console.log(response)
             console.log(weatherForecast);
+            showFiveDayForecast();
         },
         error: function (xhr, status, error) {
             // Handle error
@@ -118,9 +122,72 @@ function showCurrentWeather() {
     currentWeatherEl.append(currentWeatherListEl);
 }
 
-function showFiveDayForcast() {
 
+function showFiveDayForecast() {
+    // Clear existing content in the forecast section
+    $('#forecast-section').empty();
+
+    // Loop through the first 5 items of the weatherForecast array
+    for (var i = 0; i < 5; i++) {
+        var forecast = weatherForecast[i];
+        var imgSrc;
+        // Calculate the delay based on the index, for example
+        var delayClass = `delay-${i + 1}s`;
+        // Determine the image source based on weather.condition
+        switch (forecast.condition) {
+            case "Clouds":
+                imgSrc = "./assets/images/cloudy.png";
+                break;
+            case "Clear":
+                imgSrc = "./assets/images/sunny.png";
+                break;
+            case "Rain":
+                imgSrc = "./assets/images/rain.png";
+                break;
+            case "Snow":
+                imgSrc = "./assets/images/snowy.png";
+                break;
+            case "Thunderstorm":
+                imgSrc = "./assets/images/thunderstorms.png";
+                break;
+            default:
+                imgSrc = ""; // Default case if no condition matches or no icon needed
+        }
+
+        const dateString = forecast.date;
+        const date = new Date(dateString);
+
+        // Extracting the day of the week and the date
+        const options = { weekday: 'long', day: 'numeric' };
+        const formattedDate = date.toLocaleDateString('en-US', options);
+
+        console.log(formattedDate); // Outputs: "Tuesday, 5"
+
+
+        // Create the card HTML with 'weather-icon' class added to the image
+        var cardHtml = `
+               <div class="col justify-content-center fadeIn ${delayClass}">
+                    <div class="card thick-border" style="width: 18rem;">
+                    <section class="row">
+                        <img src="${imgSrc}" class="col card-img-top weather-icon-card" alt="${forecast.condition}">
+                        <h5 class="col d-flex align-items-center">${formattedDate}</h5>
+                     </section>
+                        <div class="card-body">
+                            <h5 class="card-title">Forecast</h5>
+                            <p class="card-text">Temperature: ${forecast.temp}°F</p>
+                            <p class="card-text">Humidity: ${forecast.humidity}%</p>
+                            <p class="card-text">Wind Speed: ${forecast.wind_speed} mph</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+        // Append the card to the forecast section
+        $('#forecast-section').append(cardHtml);
+    }
 }
+
+
 
 
 // variable to handle user input via ID
