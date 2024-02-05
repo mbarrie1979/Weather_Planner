@@ -11,10 +11,8 @@ var weatherAPIKey = 'f5ae2638dc599c5d3619396cd657ae93';
 var weather = {};
 var weatherForecast = [];
 
+getData();
 
-if (JSON.parse(localStorage.getItem('userCities')) === null) {
-    userCities = [];
-};
 
 searchBtn.on('click', function () {
     // Assign user input to variable
@@ -23,7 +21,7 @@ searchBtn.on('click', function () {
     // Check if the city is already in the userCities array
     if (!userCities.includes(cityName)) {
         userCities.push(cityName); // Add city to array if not already present
-        localStorage.setItem('userCities', JSON.stringify(userCities)); // Update localStorage
+        storeData(userCities);
         displayUserCities(); // Update the display
     }
 
@@ -37,10 +35,22 @@ searchBtn.on('click', function () {
     userInput.val("");
 });
 
+function storeData(arr) {
+    localStorage.setItem('userCities', JSON.stringify(arr));
+}
+
+function getData() {
+    var storedCities = JSON.parse(localStorage.getItem('userCities'));
+    if (storedCities !== null) {
+        userCities = storedCities;
+    }
+    displayUserCities(); // Display cities as soon as they are fetched
+}
+
 
 
 function displayUserCities() {
-    localStorage.setItem('userCities', JSON.stringify(userCities));
+    storeData(userCities);
 
     // Clear existing city buttons to prevent duplicates
     $('#city-buttons').empty();
