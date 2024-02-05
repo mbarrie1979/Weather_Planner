@@ -1,27 +1,71 @@
 console.log("HI!")
 
 var userInput = $('#text-input')
+var searchBtn = $('#search')
 var userCities = [];
 var currentCity = $('#current-city');
 var currentWeatherEl = $('#current-weather');
 var currentWeatherListEl = $('<ul>');
-var city;
 var weatherAPIKey = 'f5ae2638dc599c5d3619396cd657ae93';
 
 var weather = {};
 var weatherForecast = [];
 
-userInput.on('change', function () {
-    city = this.value
-    getWeather();
-    getWeatherForecast();
-})
+
+if (JSON.parse(localStorage.getItem('userCities')) === null) {
+    userCities = [];
+};
+
+searchBtn.on('click', function () {
+    // Assign user input to variable
+    var cityName = userInput.val().trim(); // Use .trim() to remove any leading/trailing whitespace
+
+    // Check if the city is already in the userCities array
+    if (!userCities.includes(cityName)) {
+        userCities.push(cityName); // Add city to array if not already present
+        localStorage.setItem('userCities', JSON.stringify(userCities)); // Update localStorage
+        displayUserCities(); // Update the display
+    }
+
+    // Search weather
+    getWeather(cityName);
+
+    // Search 5-day forecast
+    getWeatherForecast(cityName);
+
+    // Clear user input
+    userInput.val("");
+});
+
+
+
+function displayUserCities() {
+    localStorage.setItem('userCities', JSON.stringify(userCities));
+
+    // Clear existing city buttons to prevent duplicates
+    $('#city-buttons').empty();
+
+    userCities.forEach(function (city) {
+        var cityButton = $('<button>')
+            .addClass('btn btn-primary m-1') // Add Bootstrap classes and a margin
+            .text(city) // Set the button text to the city name
+            .on('click', function () {
+                var cityName = $(this).text();
+                console.log(`The button is reading: ${cityName}`);
+                getWeather(cityName);
+                getWeatherForecast(cityName);
+            });
+
+
+        $('#city-buttons').append(cityButton);
+    });
+}
 
 
 // rewuest for openWeather API
-function getWeather() {
-    var requestWeatherUrl = 'https://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' + weatherAPIKey + '&units=imperial';
-
+function getWeather(cityName) {
+    var requestWeatherUrl = 'https://api.openweathermap.org/data/2.5/weather?q=' + cityName + '&appid=' + weatherAPIKey + '&units=imperial';
+    console.log(`Get Weather is reading: ${cityName}`)
     $.ajax({
         url: requestWeatherUrl,
         method: 'GET',
@@ -34,7 +78,7 @@ function getWeather() {
             weather.condition = response.weather[0].main
             console.log(weather.condition);
             console.log(response)
-            showCurrentWeather();
+            showCurrentWeather(cityName);
         },
         // if invalid city is entered
         error: function (xhr, status, error) {
@@ -44,8 +88,8 @@ function getWeather() {
     });
 }
 
-function getWeatherForecast() {
-    var requestWeatherForecastUrl = 'https://api.openweathermap.org/data/2.5/forecast?q=' + city + '&appid=' + weatherAPIKey + '&units=imperial';
+function getWeatherForecast(cityName) {
+    var requestWeatherForecastUrl = 'https://api.openweathermap.org/data/2.5/forecast?q=' + cityName + '&appid=' + weatherAPIKey + '&units=imperial';
     weatherForecast = []; // Make sure the name is consistent (Forecast not Forcast)
     $.ajax({
         url: requestWeatherForecastUrl,
@@ -74,7 +118,7 @@ function getWeatherForecast() {
 }
 
 
-function showCurrentWeather() {
+function showCurrentWeather(cityName) {
     // Clear previous weather data
     currentWeatherListEl.empty();
     currentCity.empty(); // Clear previous city name and weather icon
@@ -101,7 +145,7 @@ function showCurrentWeather() {
             imgSrc = ""; // Default case if no condition matches or no icon needed
     }
     // Set the city name text
-    currentCity.append(city);
+    currentCity.append(cityName);
     // Append the image to the currentCity if imgSrc is not empty
     if (imgSrc) {
         var weatherIcon = $('<img>').attr('src', imgSrc).attr('alt', weather.condition).addClass('weather-icon');
