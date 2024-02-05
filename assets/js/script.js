@@ -1,7 +1,8 @@
 console.log("HI!")
 
-var userInput = $('#text-input')
-var searchBtn = $('#search')
+var userInput = $('#text-input');
+var searchBtn = $('#search');
+var clearBtn = $('#clear');
 var userCities = [];
 var currentCity = $('#current-city');
 var currentWeatherEl = $('#current-weather');
@@ -10,35 +11,48 @@ var weatherAPIKey = 'f5ae2638dc599c5d3619396cd657ae93';
 
 var weather = {};
 var weatherForecast = [];
+var cityValid = false;
 
 getData();
 
 
 searchBtn.on('click', function () {
-    // Assign user input to variable
-    var cityName = userInput.val().trim(); // Use .trim() to remove any leading/trailing whitespace
 
-    // Check if the city is already in the userCities array
-    if (!userCities.includes(cityName)) {
-        userCities.push(cityName); // Add city to array if not already present
-        storeData(userCities);
-        displayUserCities(); // Update the display
+    if (userInput.val() === "") {
+        return;
+    } else {
+        // Assign user input to variable
+        var cityName = userInput.val().trim(); // Use .trim() to remove any leading/trailing whitespace
+
+        // Search weather
+        getWeather(cityName);
+
+        // Search 5-day forecast
+        getWeatherForecast(cityName);
+
+        // Clear user input
+        userInput.val("");
     }
-
-    // Search weather
-    getWeather(cityName);
-
-    // Search 5-day forecast
-    getWeatherForecast(cityName);
-
-    // Clear user input
-    userInput.val("");
 });
 
+// clear all information in city list and on page
+clearBtn.on('click', function () {
+    $('#search-list').empty();
+    currentCity.empty();
+    currentWeatherEl.empty();
+    $('#forecast-section').empty();
+    userCities = [];
+    storeData(userCities);
+    displayUserCities()
+
+})
+
+// Stores to local storage
 function storeData(arr) {
     localStorage.setItem('userCities', JSON.stringify(arr));
 }
 
+// Retrieves data from local storage to be displayed
 function getData() {
     var storedCities = JSON.parse(localStorage.getItem('userCities'));
     if (storedCities !== null) {
@@ -53,8 +67,9 @@ function displayUserCities() {
     storeData(userCities);
 
     // Clear existing city buttons to prevent duplicates
-    $('#city-buttons').empty();
+    $('#search-list').empty();
 
+    // iterates over userCities array to be appended to the DOM as buttons
     userCities.forEach(function (city) {
         var cityButton = $('<button>')
             .addClass('btn btn-primary m-1') // Add Bootstrap classes and a margin
@@ -66,8 +81,11 @@ function displayUserCities() {
                 getWeatherForecast(cityName);
             });
 
+        // Appends buttons in list items to the DOM
+        var searchEl = $('<li>')
+        $('#search-list').append(searchEl);
+        searchEl.html(cityButton);
 
-        $('#city-buttons').append(cityButton);
     });
 }
 
@@ -80,33 +98,46 @@ function getWeather(cityName) {
         url: requestWeatherUrl,
         method: 'GET',
         success: function (response) {
-
+            cityValid = true;
             // Assuming the request was successful and data is retrieved
+            // writes to object for weather data
             weather.temp = Math.floor(response.main.temp);
             weather.wind_speed = Math.floor(response.wind.speed);
             weather.humidity = response.main.humidity;
             weather.condition = response.weather[0].main
-            console.log(weather.condition);
-            console.log(response)
+            // Takes care of current day weather for searched city 
             showCurrentWeather(cityName);
+
+
+            // Check if the city is already in the userCities array and if it's a valid city
+            if (!userCities.includes(cityName) && cityValid) {
+                console.log(cityValid)
+                userCities.push(cityName); // Add city to array if not already present
+                storeData(userCities);
+                displayUserCities();
+            }
+
         },
         // if invalid city is entered
         error: function (xhr, status, error) {
+            cityValid = false;
             // Handle error scenario, such as when the city is not found
-            // alert("Please enter a valid city. Error: " + error);
+            alert("Please enter a valid city. Error: " + error);
         }
     });
 }
 
+// fetches forecast
 function getWeatherForecast(cityName) {
     var requestWeatherForecastUrl = 'https://api.openweathermap.org/data/2.5/forecast?q=' + cityName + '&appid=' + weatherAPIKey + '&units=imperial';
-    weatherForecast = []; // Make sure the name is consistent (Forecast not Forcast)
+    weatherForecast = [];
     $.ajax({
         url: requestWeatherForecastUrl,
         method: 'GET',
         success: function (response) {
+            console.log(response);
             // Assuming the request was successful and data is retrieved
-            for (var i = 0; i < response.list.length; i += 8) { // Adjusted to loop through each day
+            for (var i = 4; i < response.list.length; i += 8) { // Adjusted to loop through each day for noon forecast
                 var forecast = {
                     temp: Math.floor(response.list[i].main.temp),
                     humidity: response.list[i].main.humidity,
@@ -116,7 +147,6 @@ function getWeatherForecast(cityName) {
                 };
                 weatherForecast.push(forecast);
             }
-            console.log(response)
             console.log(weatherForecast);
             showFiveDayForecast();
         },

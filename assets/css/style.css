@@ -1,4 +1,6 @@
-
+#search-list {
+    list-style: none;
+}
 
 .weather-icon {
     height: 5rem;
