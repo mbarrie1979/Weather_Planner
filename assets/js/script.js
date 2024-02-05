@@ -72,7 +72,7 @@ function displayUserCities() {
     // iterates over userCities array to be appended to the DOM as buttons
     userCities.forEach(function (city) {
         var cityButton = $('<button>')
-            .addClass('btn btn-primary m-1') // Add Bootstrap classes and a margin
+            .addClass('btn btn-info m-1') // Add Bootstrap classes and a margin
             .text(city) // Set the button text to the city name
             .on('click', function () {
                 var cityName = $(this).text();
@@ -147,7 +147,6 @@ function getWeatherForecast(cityName) {
                 };
                 weatherForecast.push(forecast);
             }
-            console.log(weatherForecast);
             showFiveDayForecast();
         },
         error: function (xhr, status, error) {
@@ -180,9 +179,8 @@ function showCurrentWeather(cityName) {
         case "Thunderstorm":
             imgSrc = "./assets/Images/thunderstorms.png";
             break;
-        // Add more cases as needed
         default:
-            imgSrc = ""; // Default case if no condition matches or no icon needed
+            imgSrc = "";
     }
     // Set the city name text
     currentCity.append(cityName);
@@ -196,11 +194,12 @@ function showCurrentWeather(cityName) {
 
     // Create and append list items for weather details with margin class
     var tempLi = $('<li>').text(`Temperature: ${weather.temp} °F`).addClass('m-3');
-    var windLi = $('<li>').text(`Wind Speed: ${weather.wind_speed} MPH`).addClass('m-3');
     var humidityLi = $('<li>').text(`Humidity: ${weather.humidity} %`).addClass('m-3');
+    var windLi = $('<li>').text(`Wind Speed: ${weather.wind_speed} MPH`).addClass('m-3');
+
 
     // Append the list items to the UL element
-    currentWeatherListEl.append(tempLi, windLi, humidityLi);
+    currentWeatherListEl.append(tempLi, humidityLi, windLi );
 
     // Append the UL element to the currentWeatherEl container
     currentWeatherEl.append(currentWeatherListEl);
@@ -235,7 +234,7 @@ function showFiveDayForecast() {
                 imgSrc = "./assets/Images/thunderstorms.png";
                 break;
             default:
-                imgSrc = ""; // Default case if no condition matches or no icon needed
+                imgSrc = "";
         }
 
         const dateString = forecast.date;
