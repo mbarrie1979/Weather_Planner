@@ -82,19 +82,19 @@ function showCurrentWeather() {
     var imgSrc;
     switch (weather.condition) {
         case "Clouds":
-            imgSrc = "/assets/Images/cloudy.png";
+            imgSrc = "./assets/Images/cloudy.png";
             break;
         case "Clear":
-            imgSrc = "/assets/Images/sunny.png";
+            imgSrc = "./assets/Images/sunny.png";
             break;
         case "Rain":
-            imgSrc = "/assets/Images/rain.png";
+            imgSrc = "./assets/Images/rain.png";
             break;
         case "Snow":
-            imgSrc = "/assets/Images/snowy.png";
+            imgSrc = "./assets/Images/snowy.png";
             break;
         case "Thunderstorm":
-            imgSrc = "/assets/Images/thunderstorms.png";
+            imgSrc = "./assets/Images/thunderstorms.png";
             break;
         // Add more cases as needed
         default:
@@ -136,19 +136,19 @@ function showFiveDayForecast() {
         // Determine the image source based on weather.condition
         switch (forecast.condition) {
             case "Clouds":
-                imgSrc = "/assets/Images/cloudy.png";
+                imgSrc = "./assets/Images/cloudy.png";
                 break;
             case "Clear":
-                imgSrc = "/assets/Images/sunny.png";
+                imgSrc = "./assets/Images/sunny.png";
                 break;
             case "Rain":
-                imgSrc = "/assets/Images/rain.png";
+                imgSrc = "./assets/Images/rain.png";
                 break;
             case "Snow":
-                imgSrc = "/assets/Images/snowy.png";
+                imgSrc = "./assets/Images/snowy.png";
                 break;
             case "Thunderstorm":
-                imgSrc = "/assets/Images/thunderstorms.png";
+                imgSrc = "./assets/Images/thunderstorms.png";
                 break;
             default:
                 imgSrc = ""; // Default case if no condition matches or no icon needed
