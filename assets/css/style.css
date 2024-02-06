@@ -1,13 +1,22 @@
-#search-list {
+
+/* removes bullet points */
+.search-list {
     list-style: none;
 }
 
+.now-text {
+    margin-left: 40px;
+}
+
+/* recent searches font size */
 #recent {
     font-size: 20px;
 }
 
+/* style for current weather icon */
 .weather-icon {
-    height: 5rem;
+    height: 8rem;
+    width: 9rem;
 }
 
 .weather-icon-card {
