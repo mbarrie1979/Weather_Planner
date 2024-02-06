@@ -20,15 +20,15 @@ The Weather Dashboard is a dynamic web application that provides users with the 
 
 ## Screenshots
 
-- ![Screenshot 1](./assets/readme_screenshots/screenshot_1.png)
+- ![Screenshot 1](./assets/readme_screenshots/screenshot_1a.png)
 
-- ![Screenshot 2](./assets/readme_screenshots/screenshot_2.png)
+- ![Screenshot 2](./assets/readme_screenshots/screenshot_2a.png)
 
-- ![Screenshot 3](./assets/readme_screenshots/screenshot_3.png)
+- ![Screenshot 3](./assets/readme_screenshots/screenshot_3a.png)
 
-- ![Screenshot 4](./assets/readme_screenshots/screenshot_4.png)
+- ![Screenshot 4](./assets/readme_screenshots/screenshot_4a.png)
 
-- ![Screenshot 5](./assets/readme_screenshots/screenshot_5.png)
+- ![Screenshot 5](./assets/readme_screenshots/screenshot_5a.png)
 
 ## Try it Out!
 [Click here to try it out!](https://mbarrie1979.github.io/Weather_Planner/)
