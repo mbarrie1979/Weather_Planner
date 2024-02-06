@@ -1,27 +1,35 @@
-console.log("HI!")
-
+// user input
 var userInput = $('#text-input');
+// search button
 var searchBtn = $('#search');
+// clear recent searches button
 var clearBtn = $('#clear');
+// array for recent searches
 var userCities = [];
+// information for current wewather
 var currentCity = $('#current-city');
 var currentWeatherEl = $('#current-weather');
 var currentWeatherListEl = $('<ul>');
 var weatherAPIKey = 'f5ae2638dc599c5d3619396cd657ae93';
 
+// object for current weather stats
 var weather = {};
+// array including objects for 5 day forecast
 var weatherForecast = [];
+// flag if user input is a valid city
 var cityValid = false;
 
+// pulls from local storage on page load
 getData();
 
-
+// event listener for search button
 searchBtn.on('click', function () {
 
+    // conditional if user input is or is not blank
     if (userInput.val() === "") {
         return;
     } else {
-        // Assign user input to variable
+        // Assign user input to variable and corrects capitalization
         var cityName = userInput.val().trim().toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 
         // Search weather
@@ -35,7 +43,7 @@ searchBtn.on('click', function () {
     }
 });
 
-// clear all information in city list and on page
+// clear all information in recent searches and on page
 clearBtn.on('click', function () {
     $('#search-list').empty();
     currentCity.empty();
@@ -62,7 +70,7 @@ function getData() {
 }
 
 
-
+// Displays the recent searches
 function displayUserCities() {
     storeData(userCities);
 
@@ -90,7 +98,7 @@ function displayUserCities() {
 }
 
 
-// rewuest for openWeather API
+// request for openWeather API
 function getWeather(cityName) {
     var requestWeatherUrl = 'https://api.openweathermap.org/data/2.5/weather?q=' + cityName + '&appid=' + weatherAPIKey + '&units=imperial';
     console.log(`Get Weather is reading: ${cityName}`)
@@ -143,7 +151,7 @@ function getWeatherForecast(cityName) {
                 var forecast = {
                     temp: Math.floor(response.list[i].main.temp),
                     humidity: response.list[i].main.humidity,
-                    wind_speed: Math.floor(response.list[i].wind.speed), // Adjusted based on the correct path
+                    wind_speed: Math.floor(response.list[i].wind.speed),
                     icon: response.list[i].weather[0].icon,
                     date: response.list[i].dt_txt
                 };
@@ -158,7 +166,7 @@ function getWeatherForecast(cityName) {
     });
 }
 
-
+// Displays current weather information
 function showCurrentWeather(cityName) {
     // Clear previous weather data
     currentWeatherListEl.empty();
@@ -171,7 +179,6 @@ function showCurrentWeather(cityName) {
     currentDate.addClass('display-5 ml-5 col now-text');
 
     // Append the weather icon image to the currentCity
-    // Note: Make sure you're using backticks (`) for template literals to insert variables
     var weatherIconUrl = `http://openweathermap.org/img/wn/${weather.icon}.png`;
     var weatherIconImg = $('<img>').attr('src', weatherIconUrl).attr('alt', 'Weather icon').addClass('weather-icon');
     currentCity.append(weatherIconImg);
@@ -190,7 +197,7 @@ function showCurrentWeather(cityName) {
 }
 
 
-
+// Displays 5 day forecast
 function showFiveDayForecast() {
     // Clear existing content in the forecast section
     $('#forecast-section').empty();
@@ -205,14 +212,15 @@ function showFiveDayForecast() {
         // Use the icon code from the forecast object to construct the image URL
         var iconUrl = `http://openweathermap.org/img/wn/${forecast.icon}.png`;
 
+        // grabs date information from forecast object
         const dateString = forecast.date;
         const date = new Date(dateString);
+
 
         // Extracting the day of the week and the date
         const options = { weekday: 'long', day: 'numeric' };
         const formattedDate = date.toLocaleDateString('en-US', options);
 
-        console.log(formattedDate); // Outputs: "Tuesday, 5"
 
         // Create the card HTML with the weather icon image
         var cardHtml = `

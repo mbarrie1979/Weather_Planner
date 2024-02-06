@@ -12,21 +12,26 @@
 
 <body>
     <main class="container vh-100">
+        <!-- Title at the top -->
         <header>
             <h1 class="display-4 d-flex justify-content-center bg-warning">Weather Report</h1>
         </header>
+        <!-- Section for user input, recent searches, and current weather display -->
         <section class="container">
             <section class="row h-25 border d-flex justify-content-between" id="input-and-thisDay">
                 <div id="input-section" class="col-12 col-md-4 m-1">
                     <section class="row">
+                        <!-- user input section -->
                         <h2 class="display-5">City Search</h2>
                         <input id="text-input" type="text" class="w-50 col"
                             placeholder="Enter a City then press Search">
+                        <!-- buttons for search and clear recents -->
                         <div class="row">
                             <button id="search" class="btn btn-primary btn-sm col-5">Search</button>
                             <button id="clear" class="btn btn-secondary btn-sm col-5">Clear Recent</button>
                         </div>
                     </section>
+                    <!-- recent search results -->
                     <div id="city-buttons" class="row">
                         <div id="search-list" class="m-0 search-list">
 
@@ -34,6 +39,7 @@
 
                     </div>
                 </div>
+                <!-- current weather display -->
                 <div id="current-display" class="col-12 col-md-7 border thick-border">
                     <h2 id="current-city" class="display-2"></h2>
                     <section id="current-weather" class="col">
@@ -42,6 +48,7 @@
                 </div>
             </section>
         </section>
+        <!-- 5 day forecast results -->
         <section class="container-fluid">
             <section class="row d-flex justify-content-center" id="forecast-section">
 
