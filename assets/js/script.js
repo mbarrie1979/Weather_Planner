@@ -105,6 +105,7 @@ function getWeather(cityName) {
             weather.wind_speed = Math.floor(response.wind.speed);
             weather.humidity = response.main.humidity;
             weather.condition = response.weather[0].main
+            weather.icon = response.weather[0].icon;
             // Takes care of current day weather for searched city 
             showCurrentWeather(cityName);
 
@@ -142,7 +143,7 @@ function getWeatherForecast(cityName) {
                     temp: Math.floor(response.list[i].main.temp),
                     humidity: response.list[i].main.humidity,
                     wind_speed: Math.floor(response.list[i].wind.speed), // Adjusted based on the correct path
-                    condition: response.list[i].weather[0].main,
+                    icon: response.list[i].weather[0].icon,
                     date: response.list[i].dt_txt
                 };
                 weatherForecast.push(forecast);
@@ -161,49 +162,28 @@ function showCurrentWeather(cityName) {
     // Clear previous weather data
     currentWeatherListEl.empty();
     currentCity.empty(); // Clear previous city name and weather icon
-    // Determine the image source based on weather.condition
-    var imgSrc;
-    switch (weather.condition) {
-        case "Clouds":
-            imgSrc = "./assets/Images/cloudy.png";
-            break;
-        case "Clear":
-            imgSrc = "./assets/Images/sunny.png";
-            break;
-        case "Rain":
-            imgSrc = "./assets/Images/rain.png";
-            break;
-        case "Snow":
-            imgSrc = "./assets/Images/snowy.png";
-            break;
-        case "Thunderstorm":
-            imgSrc = "./assets/Images/thunderstorms.png";
-            break;
-        default:
-            imgSrc = "";
-    }
+
     // Set the city name text
     currentCity.append(cityName);
-    // Append the image to the currentCity if imgSrc is not empty
-    if (imgSrc) {
-        var weatherIcon = $('<img>').attr('src', imgSrc).attr('alt', weather.condition).addClass('weather-icon');
-        currentCity.append(weatherIcon);
-    }
 
-
+    // Append the weather icon image to the currentCity
+    // Note: Make sure you're using backticks (`) for template literals to insert variables
+    var weatherIconUrl = `http://openweathermap.org/img/wn/${weather.icon}.png`;
+    var weatherIconImg = $('<img>').attr('src', weatherIconUrl).attr('alt', 'Weather icon').css('height', '10rem');
+    currentCity.append(weatherIconImg);
 
     // Create and append list items for weather details with margin class
     var tempLi = $('<li>').text(`Temperature: ${weather.temp} °F`).addClass('m-3');
     var humidityLi = $('<li>').text(`Humidity: ${weather.humidity} %`).addClass('m-3');
     var windLi = $('<li>').text(`Wind Speed: ${weather.wind_speed} MPH`).addClass('m-3');
 
-
     // Append the list items to the UL element
-    currentWeatherListEl.append(tempLi, humidityLi, windLi );
+    currentWeatherListEl.append(tempLi, humidityLi, windLi);
 
     // Append the UL element to the currentWeatherEl container
     currentWeatherEl.append(currentWeatherListEl);
 }
+
 
 
 function showFiveDayForecast() {
@@ -213,29 +193,12 @@ function showFiveDayForecast() {
     // Loop through the first 5 items of the weatherForecast array
     for (var i = 0; i < 5; i++) {
         var forecast = weatherForecast[i];
-        var imgSrc;
+
         // Calculate the delay based on the index, for example
         var delayClass = `delay-${i + 1}s`;
-        // Determine the image source based on weather.condition
-        switch (forecast.condition) {
-            case "Clouds":
-                imgSrc = "./assets/Images/cloudy.png";
-                break;
-            case "Clear":
-                imgSrc = "./assets/Images/sunny.png";
-                break;
-            case "Rain":
-                imgSrc = "./assets/Images/rain.png";
-                break;
-            case "Snow":
-                imgSrc = "./assets/Images/snowy.png";
-                break;
-            case "Thunderstorm":
-                imgSrc = "./assets/Images/thunderstorms.png";
-                break;
-            default:
-                imgSrc = "";
-        }
+
+        // Use the icon code from the forecast object to construct the image URL
+        var iconUrl = `http://openweathermap.org/img/wn/${forecast.icon}.png`;
 
         const dateString = forecast.date;
         const date = new Date(dateString);
@@ -246,13 +209,12 @@ function showFiveDayForecast() {
 
         console.log(formattedDate); // Outputs: "Tuesday, 5"
 
-
-        // Create the card HTML with 'weather-icon' class added to the image
+        // Create the card HTML with the weather icon image
         var cardHtml = `
                <div class="col justify-content-center fadeIn ${delayClass}">
                     <div class="card thick-border" style="width: 18rem;">
                     <section class="row">
-                        <img src="${imgSrc}" class="col card-img-top weather-icon-card" alt="${forecast.condition}">
+                        <img src="${iconUrl}" class="col card-img-top weather-icon-card" alt="Weather icon">
                         <h5 class="col d-flex align-items-center">${formattedDate}</h5>
                      </section>
                         <div class="card-body">
