@@ -22,7 +22,7 @@ searchBtn.on('click', function () {
         return;
     } else {
         // Assign user input to variable
-        var cityName = userInput.val().trim(); // Use .trim() to remove any leading/trailing whitespace
+        var cityName = userInput.val().trim().toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 
         // Search weather
         getWeather(cityName);
@@ -98,6 +98,7 @@ function getWeather(cityName) {
         url: requestWeatherUrl,
         method: 'GET',
         success: function (response) {
+            console.log(response);
             cityValid = true;
             // Assuming the request was successful and data is retrieved
             // writes to object for weather data
@@ -112,7 +113,7 @@ function getWeather(cityName) {
 
             // Check if the city is already in the userCities array and if it's a valid city
             if (!userCities.includes(cityName) && cityValid) {
-                console.log(cityValid)
+                // console.log(cityValid)
                 userCities.push(cityName); // Add city to array if not already present
                 storeData(userCities);
                 displayUserCities();
@@ -136,7 +137,7 @@ function getWeatherForecast(cityName) {
         url: requestWeatherForecastUrl,
         method: 'GET',
         success: function (response) {
-            console.log(response);
+
             // Assuming the request was successful and data is retrieved
             for (var i = 4; i < response.list.length; i += 8) { // Adjusted to loop through each day for noon forecast
                 var forecast = {
@@ -165,12 +166,16 @@ function showCurrentWeather(cityName) {
 
     // Set the city name text
     currentCity.append(cityName);
+    var currentDate = $('<h3>');
+    currentDate.text('Now');
+    currentDate.addClass('display-5 ml-5 col now-text');
 
     // Append the weather icon image to the currentCity
     // Note: Make sure you're using backticks (`) for template literals to insert variables
     var weatherIconUrl = `http://openweathermap.org/img/wn/${weather.icon}.png`;
-    var weatherIconImg = $('<img>').attr('src', weatherIconUrl).attr('alt', 'Weather icon').css('height', '10rem');
+    var weatherIconImg = $('<img>').attr('src', weatherIconUrl).attr('alt', 'Weather icon').addClass('weather-icon');
     currentCity.append(weatherIconImg);
+    currentCity.append(currentDate);
 
     // Create and append list items for weather details with margin class
     var tempLi = $('<li>').text(`Temperature: ${weather.temp} °F`).addClass('m-3');
@@ -178,7 +183,7 @@ function showCurrentWeather(cityName) {
     var windLi = $('<li>').text(`Wind Speed: ${weather.wind_speed} MPH`).addClass('m-3');
 
     // Append the list items to the UL element
-    currentWeatherListEl.append(tempLi, humidityLi, windLi);
+    currentWeatherListEl.addClass('search-list ml-0').append(tempLi, humidityLi, windLi);
 
     // Append the UL element to the currentWeatherEl container
     currentWeatherEl.append(currentWeatherListEl);
