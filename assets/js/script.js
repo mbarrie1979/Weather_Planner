@@ -82,7 +82,7 @@ function displayUserCities() {
             });
 
         // Appends buttons in list items to the DOM
-        var searchEl = $('<li>')
+        var searchEl = $('<span>')
         $('#search-list').append(searchEl);
         searchEl.html(cityButton);
 
@@ -273,10 +273,4 @@ function showFiveDayForecast() {
 
 
 
-// variable to handle user input via ID
-// event handler takes user input and puts in an object called "userCities"
-// user input triggers API call to retrieve data for that city
-// current data is posted
-// future forcast is looped over and appended and classes are added via bootstrap cards
-// "userCities" is stringified and saves to local storage
-// local storage is parsed and the DOM is appended to a ul and lis to represent recently viewed cities
+
